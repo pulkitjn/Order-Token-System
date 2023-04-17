@@ -1,0 +1,19 @@
+.container {
+  display: flex;
+  flex-direction: row;
+  height: 100vh;
+}
+
+.left {
+  flex-basis: 30%;
+  border-right: 1px solid #ccc;
+  overflow-y: auto;
+  overflow-x: auto;
+}
+
+.right {
+  flex-basis: 70%;
+  padding: 20px;
+  overflow-y: auto;
+  overflow-x: auto;
+}
