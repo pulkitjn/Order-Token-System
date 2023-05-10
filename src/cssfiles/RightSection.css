@@ -94,7 +94,7 @@
     justify-content: flex-start;
     padding-top: 5px;
     padding-bottom: 15px;
-    margin-left: 0px;
+    margin: 0px;
   }
   
   .status-buttons li:last-child {
@@ -124,7 +124,12 @@
     background-color: #28a745;
     color: #fff;
   }
-  
+
+  .status-button.collected {
+    background-color: #e41414;
+    color: #fff;
+  }
+
   .status-button:hover {
     background-color: #ccc;
   }

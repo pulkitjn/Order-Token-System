@@ -47,7 +47,7 @@ const OutletForm = (props) => {
   };
 
   return (
-    <div class="card-container">
+    <div className="card-container">
       <div className="card">
         <div className="card-header">
           <h2>{isLogin ? "Outlet Log In" : "Outlet Register"}</h2>
@@ -85,18 +85,6 @@ const OutletForm = (props) => {
                 />
               </div>
             </form>
-
-            {/*
-              Disabled for now
-              <GoogleLogin
-              clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID}
-              buttonText={`Sign ${isLogin?'In':'Up'} with Google`}
-              className="google-btn"
-              onSuccess={onSuccess}
-              onFailure={onFailure}
-              cookiePolicy={"single_host_origin"}
-              disabled={!isFieldsFilled} // disable the button if required fields are not filled
-            />*/}
             <button
               
               className="google-btn"

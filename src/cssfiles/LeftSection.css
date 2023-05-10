@@ -1,11 +1,10 @@
 .left-section {
-    width: 30%;
     background-color: #4c4c7c;
     color: #fff;
     padding: 20px;
     box-sizing: border-box;
     height: 100vh;
-    position: fixed;
+    position: relative;
     top: 0;
     left: 0;
     overflow-y: auto;

@@ -1,43 +1,64 @@
 .orders-container {
-    max-width: 800px;
-    margin: 0 auto;
-    overflow-y: auto;
-    overflow-x: auto;
+  max-width: 800px;
+  margin: 0 auto;
+  overflow-y: auto;
+  overflow-x: auto;
   }
   
   .orders-title {
-    text-align: left;
-    font-size: 2rem;
-    font-family: Lato, sans-serif;
+  text-align: left;
+  font-size: 2rem;
+  font-family: Lato, sans-serif;
   }
   
   .orders-label {
-    text-align: left;
-    margin-top: 0;
-    margin-bottom: 1rem;
+  text-align: left;
+  margin-top: 0;
+  margin-bottom: 1rem;
   }
   
   .orders-table {
-    width: 100%;
-    border-collapse: collapse;
+  width: 100%;
+  border-collapse: collapse;
   }
   
   .orders-table th,
   .orders-table td {
-    padding: 0.5rem;
-    text-align: left;
+  padding: 0.5rem;
+  text-align: left;
   }
   
   .orders-table th {
-    border-bottom: 2px solid black;
-    font-weight: bold;
+  border-bottom: 2px solid black;
+  font-weight: bold;
   }
   
   .orders-table tr:nth-child(even) {
-    background-color: #f2f2f2;
+  background-color: #f2f2f2;
   }
   
   .orders-table tr:hover {
-    background-color: #ddd;
+  background-color: #ddd;
   }
   
+  .header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  }
+  
+  .logout-btn {
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 1.2rem;
+  font-family: Lato, sans-serif;
+  }
+  
+  .user-info {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  font-size: 1.2rem;
+  font-family: Lato, sans-serif;
+  }

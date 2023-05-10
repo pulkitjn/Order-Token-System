@@ -94,6 +94,12 @@ const RightSection = () => {
                         >
                           Prepared
                         </button>
+                        <button
+                          className={`status-button ${item.status === 'collected' ? 'collected' : ''}`}
+                          onClick={() => updateOrderItemStatus(order.id, item.name, 'collected')}
+                        >
+                          Collected
+                        </button>
                       </div>
                     </li>
                   ))}

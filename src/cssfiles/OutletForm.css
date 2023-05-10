@@ -123,3 +123,10 @@
     margin-bottom: 50px;
   }
   
+  input:focus {
+    border: 2px solid rgb(255, 0, 255);
+  }
+  
+  .appname:hover {
+    cursor:pointer
+  }
