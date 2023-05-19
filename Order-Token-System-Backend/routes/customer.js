@@ -27,4 +27,7 @@ router.post('/register', customerController.verifyEmailOtp, customerController.c
 */
 router.post('/login', customerController.customerLogin);
 
+router.get('/protected', customerController.customerTokenAuthenticate, (req,res)=>{
+    res.send(`You are now in a protected route. Your email is ${req.email}`);
+})
 export default router;
