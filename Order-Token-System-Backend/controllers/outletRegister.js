@@ -10,13 +10,13 @@ const outletRegister = async (req, res) => {
     // validate the req.body
     const error = validateOutlet(req.body);
     if (Object.keys(error).length !== 0) {
-      throw error;
+      console.log(error);
       res.status(400).json({ error });
       return;
     }
 
     // Hash the password
-    const hashedPassword = hash(pswd, process.env.OTS_BCRYPT_SALT_ROUNDS);
+    const hashedPassword = await hash(pswd, parseInt(process.env.OTS_BCRYPT_SALT_ROUNDS,10));
 
     // Create a new Outlet instance
     const outlet = new Outlet({
@@ -36,9 +36,10 @@ const outletRegister = async (req, res) => {
     });
 
     // Return a success response
-    res.status(200).json({ message: "Outlet registered successfully." });
+    res.status(201).json({ message: "Outlet registered successfully." });
   } catch (error) {
     // Handle any errors that occurred during registration
+    console.log(error);
     res.status(500).json({ error: "Internal server error" });
   }
 };
@@ -92,20 +93,21 @@ const validateOutlet = (data) => {
   }
 
   if (
-    !data.password ||
-    typeof data.password !== "string" ||
-    data.password.trim() === "" ||
-    data.password.length < 8
+    !data.pswd ||
+    typeof data.pswd !== "string" ||
+    data.pswd.trim() === "" ||
+    data.pswd.length < 8
   ) {
     errors.password =
       "Password is required and must be at least 8 characters long.";
   }
-
+  console.log(data.cnfrmPswd);
+  console.log(data.pswd);
   if (
     !data.cnfrmPswd ||
     typeof data.cnfrmPswd !== "string" ||
     data.cnfrmPswd.trim() === "" ||
-    data.cnfrmPswd !== data.password
+    data.cnfrmPswd !== data.pswd
   ) {
     errors.cnfrmPswd =
       "Confirmation password is required and must match the password field.";

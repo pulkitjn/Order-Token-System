@@ -1,16 +1,17 @@
 import { createTransport } from "nodemailer";
 
-// Create a Nodemailer transporter for sending emails
-const transporter = createTransport({
-  service: "Gmail", // e.g., Gmail, Yahoo Mail
-  auth: {
-    user: process.env.OTS_SENDER_EMAIL,
-    pass: process.env.OTS_SENDER_EMAIL_PASSWORD,
-  },
-});
-
 // Function to send the OTP to the user's email
 const sendEmailOTP = (req, res) => {
+  // Create a Nodemailer transporter for sending emails
+  const transporter = createTransport({
+    host: "sandbox.smtp.mailtrap.io",
+    port: 2525,
+    auth: {
+      user: process.env.OTS_MAIL_TRAP_USER,
+      pass: process.env.OTS_MAIL_TRAP_PASS,
+    },
+  });
+
   const mailOptions = {
     from: process.env.OTS_SENDER_EMAIL,
     to: req.body.email,

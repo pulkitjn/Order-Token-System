@@ -17,7 +17,7 @@ const customerRegister = async (req, res) => {
     }
 
     // Hash the password
-    const hashedPassword = hash(pswd, process.env.OTS_BCRYPT_SALT_ROUNDS);
+    const hashedPassword = await hash(pswd,  parseInt(process.env.OTS_BCRYPT_SALT_ROUNDS,10));
 
     // Create a new Customer instance
     const customer = new Customer({
@@ -36,9 +36,10 @@ const customerRegister = async (req, res) => {
     });
 
     // Return a success response
-    res.status(200).json({ message: "Customer registered successfully." });
+    res.status(201).json({ message: "Customer registered successfully." });
   } catch (error) {
     // Handle any errors that occurred during registration
+    console.log(error);
     res.status(500).json({ error: "Internal server error" });
   }
 };

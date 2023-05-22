@@ -7,7 +7,7 @@ dotenv.config();
 // Import route files
 import customerRoutes from './routes/customer.js';
 import outletRoutes from './routes/outlet.js';
-
+import productRoutes from './routes/product.js';
 
 app.use(express.json());
 app.use(express.urlencoded({extended:true}));
@@ -15,6 +15,7 @@ app.use(express.urlencoded({extended:true}));
 // Use the route files as middleware
 app.use('/customer', customerRoutes);
 app.use('/outlet', outletRoutes);
+app.use('/product',productRoutes);
 
 mongoose.connect(process.env.OTS_DB_CONNECT_STR, {
   dbName: 'OTS_db',
@@ -24,8 +25,8 @@ mongoose.connect(process.env.OTS_DB_CONNECT_STR, {
   .then(() => {
     console.log('Connected to MongoDB');
     // Start the server after successful database connection
-    app.listen(3000, () => {
-      console.log(`Server started on port ${3000}`);
+    app.listen(process.env.OTS_SERVER_PORT, () => {
+      console.log(`Server started on port ${process.env.OTS_SERVER_PORT}`);
     });
   })
   .catch((error) => {

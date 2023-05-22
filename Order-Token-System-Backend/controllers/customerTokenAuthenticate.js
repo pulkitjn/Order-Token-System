@@ -16,7 +16,7 @@ const customerTokenAuthenticate = async (req, res, next) => {
     if (!existingCustomer) {
       return res.status(404).json({ error: "Not found" });
     }
-    req.email = payLoad.customerEmail;
+    req.body.customerEmail = payLoad.customerEmail;
     next();
   } catch (error) {
     return res.status(403).json({ error });

@@ -6,7 +6,7 @@ import Outlet from "../models/outletModel.js";
 const outletLogin = async (req, res) => {
   try {
     const { email, pswd } = req.body;
-    await Outlet.findOne({ email: email });
+    const existingOutlet = await Outlet.findOne({ email: email });
 
     if (!existingOutlet) {
       res.status(401).json({ error: "Email is not registered" });
