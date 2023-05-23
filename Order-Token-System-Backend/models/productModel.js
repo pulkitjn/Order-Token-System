@@ -1,12 +1,10 @@
 import { Schema, model } from 'mongoose';
 
 const productSchema = new Schema({
-  outletEmail: {
-    type: String,
+  outletId: {
+    type: Schema.Types.ObjectId,
+    ref: 'Outlet',
     required: true,
-    trim: true,
-    lowercase: true,
-    match: [/^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$/, 'Invalid email address'],
   },
   name: {
     type: String,

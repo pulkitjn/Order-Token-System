@@ -1,10 +1,8 @@
 import Product from "../models/productModel.js";
-import Outlet from "../models/outletModel.js";
 
 const addProduct = async (req, res) => {
   try {
-    const { outletEmail, name, priceType, price, description } = req.body;
-    console.log(outletEmail);
+    const { outletId, name, priceType, price, description } = req.body;
     // validate the req.body
     const error = validateProduct(req.body);
     if (Object.keys(error).length !== 0) {
@@ -13,34 +11,26 @@ const addProduct = async (req, res) => {
       return;
     }
 
-    const result = await Outlet.findOne({ email: outletEmail });
-    if (!result) {
-      console.log("Outlet email is not registered");
-      res.status(400).json({ error: "Outlet email is not registerd" });
-      return;
-    }
     const findResult = await Product.findOne({
-      outletEmail: outletEmail,
-      name: name,
+      outletId,
+      name,
     });
     if (findResult) {
-      console.log(`Product with name ${name} from ${outletEmail} already exists`);
-      res
-        .status(404)
-        .json({
-          error: `Product with name ${name} already exists`,
-        });
+      console.log(`Product with name ${name} from ${outletId} already exists`);
+      res.status(404).json({
+        error: `Product with name ${name} already exists`,
+      });
       return;
     }
     const product = new Product({
-      outletEmail,
-      name: name,
+      outletId,
+      name,
       priceType,
       price,
       description,
     });
 
-    // Add the customer to the database
+    // Add the product to the database
     await product
       .save()
       .then((res) => {
@@ -62,7 +52,7 @@ const addProduct = async (req, res) => {
 
 const deleteProduct = async (req, res) => {
   try {
-    const { outletEmail, name } = req.body;
+    const { outletId, name } = req.body;
     const error = validateEmailName(req);
     if (Object.keys(error).length !== 0) {
       console.log(error);
@@ -71,22 +61,22 @@ const deleteProduct = async (req, res) => {
     }
 
     const findResult = await Product.findOne({
-      outletEmail: outletEmail,
-      name: name,
+      outletId,
+      name,
     });
     if (!findResult) {
-      console.log(`Product with name ${name} from ${outletEmail} not found`);
-      res
-        .status(404)
-        .json({
-          error: `Product with name ${name} from ${outletEmail} not found`,
-        });
+      console.log(
+        `Product with name ${name} from outlet ${outletId} not found`
+      );
+      res.status(404).json({
+        error: `Product with name ${name} from outlet ${outletId} not found`,
+      });
       return;
     }
 
     const deleteResult = await Product.deleteOne({
-      outletEmail: outletEmail,
-      name: name,
+      outletId,
+      name,
     });
     if (deleteResult.deletedCount) {
       console.log(`Product with product name : ${name} deleted successfully`);
@@ -110,34 +100,54 @@ const updateProduct = async (req, res) => {
       res.status(400).json({ error });
       return;
     }
-    const { outletEmail, name } = req.body;
+    const { outletId, name } = req.body;
     const findResult = await Product.findOne({
-      outletEmail: outletEmail,
-      name: name,
+      outletId,
+      name,
     });
     if (!findResult) {
-      console.log(`Product with name ${name} from ${outletEmail} not found`);
-      res
-        .status(404)
-        .json({
-          error: `Product with name ${name} from ${outletEmail} not found`,
-        });
+      console.log(
+        `Product with name ${name} from outlet ${outletId} not found`
+      );
+      res.status(404).json({
+        error: `Product with name ${name} from outlet ${outletId} not found`,
+      });
       return;
     }
 
     const updatedProduct = {};
-    if (req.body.price) updatedProduct.price = req.body.price;
-    if (req.body.priceType) updatedProduct.priceType = req.body.priceType;
-    if (req.body.description) updatedProduct.description = req.body.description;
+    const forValidationProduct = {};
+    forValidationProduct.outletId = req.body.outletId;
+    forValidationProduct.name = req.body.name;
+    if (req.body.price) {
+      updatedProduct.price = req.body.price;
+      forValidationProduct.price = req.body.price;
+    }else{
+      forValidationProduct.price = findResult.price;
+    }
+    if (req.body.priceType) {
+      updatedProduct.priceType = req.body.priceType;
+      forValidationProduct.priceType = req.body.priceType;
+    }else{
+      forValidationProduct.priceType = findResult.priceType;
+    }
+    if (req.body.description) {
+      updatedProduct.description = req.body.description;
+      forValidationProduct.description = req.body.description;
+    }else{
+      forValidationProduct.description = findResult.description;
+    }
 
-    if (Object.keys(updatedProduct).length === 0) {
-      console.log("Nothing to Update");
-      res.status(400).json({ error: "Nothing to Update" });
+    // validate the req.body
+    const validationError = validateProduct(forValidationProduct);
+    if (Object.keys(validationError).length !== 0) {
+      console.log(validationError);
+      res.status(400).json({ validationError });
       return;
     }
 
     const result = await Product.updateOne(
-      { outletEmail: req.body.outletEmail, name: req.body.name },
+      { outletId: req.body.outletId, name: req.body.name },
       updatedProduct
     );
     if (result.modifiedCount > 0) {
@@ -161,14 +171,10 @@ export default {
 };
 
 const validateEmailName = (req) => {
-  // Validate outletEmail
+  // Validate outletId
   const errors = {};
-  if (!req.body.outletEmail) {
-    errors.outletEmail = "Outlet email is required";
-  } else if (
-    !/^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$/.test(req.body.outletEmail)
-  ) {
-    errors.outletEmail = "Invalid email address";
+  if (!req.body.outletId) {
+    errors.outletId = "Outlet ID is required";
   }
 
   // Validate name
@@ -184,13 +190,9 @@ const validateEmailName = (req) => {
 const validateProduct = (product) => {
   const errors = {};
 
-  // Validate outletEmail
-  if (!product.outletEmail) {
-    errors.outletEmail = "Outlet email is required";
-  } else if (
-    !/^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$/.test(product.outletEmail)
-  ) {
-    errors.outletEmail = "Invalid email address";
+  // Validate outletId
+  if (!product.outletId) {
+    errors.outletId = "Outlet ID is required";
   }
 
   // Validate name

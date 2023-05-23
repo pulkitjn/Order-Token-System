@@ -14,9 +14,9 @@ const outletTokenAuthenticate = async (req, res, next) => {
     const payLoad = verify(token, secretKey);
     const existingOutlet = await Outlet.findOne({ email: payLoad.outletEmail });
     if (!existingOutlet) {
-      return res.status(404).json({ error: "Not found" });
+      return res.status(404).json({ error: "Outlet Not found" });
     }
-    req.body.outletEmail = payLoad.outletEmail;
+    req.body.outletId = existingOutlet._id;
     next();
   } catch (error) {
     return res.status(403).json({ error });
