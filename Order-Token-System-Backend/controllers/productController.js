@@ -2,7 +2,9 @@ import Product from "../models/productModel.js";
 
 const addProduct = async (req, res) => {
   try {
-    const { outletId, name, priceType, price, description } = req.body;
+    const { name, priceType, price, description } = req.body;
+    const outletId = req.outletId;
+    req.body.outletId = outletId;
     // validate the req.body
     const error = validateProduct(req.body);
     if (Object.keys(error).length !== 0) {
@@ -52,8 +54,9 @@ const addProduct = async (req, res) => {
 
 const deleteProduct = async (req, res) => {
   try {
-    const { outletId, name } = req.body;
-    const error = validateEmailName(req);
+    const { name } = req.query;
+    const outletId = req.outletId
+    const error = validateOutletIdName({name,outletId});
     if (Object.keys(error).length !== 0) {
       console.log(error);
       res.status(400).json({ error });
@@ -94,13 +97,16 @@ const deleteProduct = async (req, res) => {
 
 const updateProduct = async (req, res) => {
   try {
-    const error = validateEmailName(req);
+    const {name } = req.body;
+    const outletId = req.outletId;
+    req.body.outletId = outletId;
+    const error = validateOutletIdName({name,outletId});
     if (Object.keys(error).length !== 0) {
       console.log(error);
       res.status(400).json({ error });
       return;
     }
-    const { outletId, name } = req.body;
+    
     const findResult = await Product.findOne({
       outletId,
       name,
@@ -117,8 +123,8 @@ const updateProduct = async (req, res) => {
 
     const updatedProduct = {};
     const forValidationProduct = {};
-    forValidationProduct.outletId = req.body.outletId;
-    forValidationProduct.name = req.body.name;
+    forValidationProduct.outletId = outletId;
+    forValidationProduct.name = name;
     if (req.body.price) {
       updatedProduct.price = req.body.price;
       forValidationProduct.price = req.body.price;
@@ -147,7 +153,7 @@ const updateProduct = async (req, res) => {
     }
 
     const result = await Product.updateOne(
-      { outletId: req.body.outletId, name: req.body.name },
+      { outletId, name },
       updatedProduct
     );
     if (result.modifiedCount > 0) {
@@ -164,23 +170,38 @@ const updateProduct = async (req, res) => {
   }
 };
 
+const getProductNames = async (req,res) =>{
+  try {
+    const outletId  = req.outletId;
+
+    // Find products with the given outletId and select only the name field
+    const products = await Product.find({ outletId }).select('name').sort('name');
+
+    res.json(products);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'An error occurred while fetching product names.' });
+  }
+}
+
 export default {
   addProduct,
   deleteProduct,
   updateProduct,
+  getProductNames
 };
 
-const validateEmailName = (req) => {
+const validateOutletIdName = ({outletId,name}) => {
   // Validate outletId
   const errors = {};
-  if (!req.body.outletId) {
+  if (!outletId) {
     errors.outletId = "Outlet ID is required";
   }
 
   // Validate name
-  if (!req.body.name) {
+  if (!name) {
     errors.name = "Product name is required";
-  } else if (!/^[A-Za-z ]+$/.test(req.body.name)) {
+  } else if (!/^[A-Za-z ]+$/.test(name)) {
     errors.name = "Product name can only contain letters and spaces";
   }
 

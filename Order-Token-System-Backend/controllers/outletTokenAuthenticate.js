@@ -16,7 +16,7 @@ const outletTokenAuthenticate = async (req, res, next) => {
     if (!existingOutlet) {
       return res.status(404).json({ error: "Outlet Not found" });
     }
-    req.body.outletId = existingOutlet._id;
+    req.outletId = existingOutlet._id;
     next();
   } catch (error) {
     return res.status(403).json({ error });

@@ -8,6 +8,7 @@ dotenv.config();
 import customerRoutes from './routes/customer.js';
 import outletRoutes from './routes/outlet.js';
 import productRoutes from './routes/product.js';
+import orderRoutes from './routes/order.js';
 
 app.use(express.json());
 app.use(express.urlencoded({extended:true}));
@@ -16,6 +17,7 @@ app.use(express.urlencoded({extended:true}));
 app.use('/customer', customerRoutes);
 app.use('/outlet', outletRoutes);
 app.use('/product',productRoutes);
+app.use('/order',orderRoutes)
 
 mongoose.connect(process.env.OTS_DB_CONNECT_STR, {
   dbName: 'OTS_db',
