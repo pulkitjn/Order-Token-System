@@ -1,8 +1,8 @@
 import outletRegisterEmailOtp from "./outletRegisterEmailOtp.js";
-import verifyEmailOtp from "./verifyEmailOtp.js";
+import verifyEmailOtp from "../emailOtp/verifyEmailOtp.js";
 import outletRegister from "./outletRegister.js";
 import outletLogin from "./outletLogin.js";
-import sendEmailOTP from "./sendEmailOtp.js";
+import sendEmailOTP from "../emailOtp/sendEmailOtp.js";
 import outletTokenAuthenticate from "./outletTokenAuthenticate.js";
 
 export default {

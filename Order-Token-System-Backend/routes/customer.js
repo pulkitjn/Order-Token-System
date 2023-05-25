@@ -1,10 +1,10 @@
 import { Router } from "express";
-import customerController from '../controllers/customerController.js'
+import customerController from '../controllers/customer/customerController.js'
 
-const router = Router();
+const customerRoutes = Router();
 
 /* {email: "EMAIL_TO_WHICH_OTP_IS_SENT"} */
-router.post('/sendotp',customerController.customerRegisterEmailOtp, customerController.sendEmailOTP);
+customerRoutes.post('/sendotp',customerController.customerRegisterEmailOtp, customerController.sendEmailOTP);
 
 
 /* 
@@ -17,7 +17,7 @@ router.post('/sendotp',customerController.customerRegisterEmailOtp, customerCont
     cnfrmPswd: "NEED_TO_BE_SAME_AS_PSWD"
 }
 */
-router.post('/register', customerController.verifyEmailOtp, customerController.customerRegister);
+customerRoutes.post('/register', customerController.verifyEmailOtp, customerController.customerRegister);
 
 /*
 {
@@ -25,9 +25,9 @@ router.post('/register', customerController.verifyEmailOtp, customerController.c
     pswd: "CUSTOMER_PSWD"
 }
 */
-router.post('/login', customerController.customerLogin);
+customerRoutes.post('/login', customerController.customerLogin);
 
-router.get('/protected', customerController.customerTokenAuthenticate, (req,res)=>{
+customerRoutes.get('/protected', customerController.customerTokenAuthenticate, (req,res)=>{
     res.send(`You are now in a protected route. Your email is ${req.customerId}`);
 })
-export default router;
+export default customerRoutes;

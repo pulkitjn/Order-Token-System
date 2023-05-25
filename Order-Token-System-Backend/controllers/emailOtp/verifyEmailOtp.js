@@ -1,4 +1,4 @@
-import Otp from "../models/otpModel.js";
+import Otp from "../../models/otpModel.js";
 
 const verifyEmailOtp = async (req, res, next) => {
     const { email, otp } = req.body;

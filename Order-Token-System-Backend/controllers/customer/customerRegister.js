@@ -1,6 +1,6 @@
 import { hash } from "bcrypt";
 
-import Customer from "../models/customerModel.js";
+import Customer from "../../models/customerModel.js";
 
 const customerRegister = async (req, res) => {
   try {

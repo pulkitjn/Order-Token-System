@@ -1,6 +1,6 @@
-import Customer from "../models/customerModel.js";
-import Otp from "../models/otpModel.js";
-import generateOTP from "./generateOtp.js";
+import Customer from "../../models/customerModel.js";
+import Otp from "../../models/otpModel.js";
+import generateOTP from "../utils/generateOtp.js";
 
 const customerRegisterEmailOtp = async (req, res, next) => {
   const { email } = req.body;

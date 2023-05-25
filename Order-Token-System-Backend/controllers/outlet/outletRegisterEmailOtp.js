@@ -1,6 +1,6 @@
-import Outlet from "../models/outletModel.js";
-import Otp from "../models/otpModel.js";
-import generateOTP from "./generateOtp.js";
+import Outlet from "../../models/outletModel.js";
+import Otp from "../../models/otpModel.js";
+import generateOTP from "../utils/generateOtp.js";
 
 const outletRegisterEmailOtp = async (req, res, next) => {
   const { email } = req.body;

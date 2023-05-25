@@ -1,8 +1,8 @@
 import pkg from "jsonwebtoken";
 const { verify } = pkg;
-import Customer from "../models/customerModel.js";
+import Outlet from "../../models/outletModel.js";
 
-const customerTokenAuthenticate = async (req, res, next) => {
+const outletTokenAuthenticate = async (req, res, next) => {
   try {
     const authHeader = req.headers.authorization;
     const token = authHeader && authHeader.split(" ")[1];
@@ -12,15 +12,15 @@ const customerTokenAuthenticate = async (req, res, next) => {
     }
     const secretKey = process.env.OTS_JWT_SECRET_KEY;
     const payLoad = verify(token, secretKey);
-    let existingCustomer = await Customer.findOne({ email: payLoad.customerEmail });
-    if (!existingCustomer) {
-      return res.status(404).json({ error: "Not found" });
+    const existingOutlet = await Outlet.findOne({ email: payLoad.outletEmail });
+    if (!existingOutlet) {
+      return res.status(404).json({ error: "Outlet Not found" });
     }
-    req.customerId = existingCustomer._id;
+    req.outletId = existingOutlet._id;
     next();
   } catch (error) {
     return res.status(403).json({ error });
   }
 };
 
-export default customerTokenAuthenticate;
+export default outletTokenAuthenticate;

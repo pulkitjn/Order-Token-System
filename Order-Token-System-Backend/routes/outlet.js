@@ -1,12 +1,17 @@
 import { Router } from "express";
-import outletController from '../controllers/outletController.js'
+import outletController from '../controllers/outlet/outletController.js'
+import outletProductRoutes from "./outletProduct.js";
+import outletOrderRoutes from "./outletOrder.js";
+const outletRoutes = Router();
 
-const router = Router();
+outletRoutes.use('/products', outletProductRoutes)
 
-router.post('/sendotp',outletController.outletRegisterEmailOtp, outletController.sendEmailOTP);
+outletRoutes.use('/order',outletOrderRoutes);
 
-router.post('/register', outletController.verifyEmailOtp, outletController.outletRegister);
+outletRoutes.post('/sendotp',outletController.outletRegisterEmailOtp, outletController.sendEmailOTP);
 
-router.post('/login', outletController.outletLogin);
+outletRoutes.post('/register', outletController.verifyEmailOtp, outletController.outletRegister);
 
-export default router;
+outletRoutes.post('/login', outletController.outletLogin);
+
+export default outletRoutes;

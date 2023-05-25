@@ -1,6 +1,6 @@
 import { hash } from "bcrypt";
 
-import Outlet from "../models/outletModel.js";
+import Outlet from "../../models/outletModel.js";
 
 const outletRegister = async (req, res) => {
   try {

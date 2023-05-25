@@ -1,7 +1,7 @@
 import { compare } from "bcrypt";
 import pkg from "jsonwebtoken";
 const { sign } = pkg;
-import Outlet from "../models/outletModel.js";
+import Outlet from "../../models/outletModel.js";
 
 const outletLogin = async (req, res) => {
   try {

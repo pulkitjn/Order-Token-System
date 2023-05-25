@@ -2,7 +2,7 @@ import { compare } from "bcrypt";
 import pkg from 'jsonwebtoken';
 const { sign } = pkg;
 
-import Customer from "../models/customerModel.js";
+import Customer from "../../models/customerModel.js";
 
 const customerLogin = async (req, res) => {
   try {

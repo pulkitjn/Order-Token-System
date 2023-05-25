@@ -1,8 +1,8 @@
-import Customer from "../models/customerModel.js";
-import OrderItem from "../models/orderItemModel.js";
-import Order from "../models/orderModel.js";
-import Product from "../models/productModel.js";
-import generateUniqueToken from "./generateUniqueToken.js";
+import Customer from "../../models/customerModel.js";
+import OrderItem from "../../models/orderItemModel.js";
+import Order from "../../models/orderModel.js";
+import Product from "../../models/productModel.js";
+import generateUniqueToken from "../utils/generateUniqueToken.js";
 
 const addOrder = async (req, res) => {
   try {
@@ -70,4 +70,4 @@ const addOrder = async (req, res) => {
 };
 
 
-export default {addOrder};
+export default addOrder;
