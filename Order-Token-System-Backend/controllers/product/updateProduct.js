@@ -2,7 +2,7 @@ import Product from "../../models/productModel.js";
 
 const updateProduct = async (req, res) => {
   try {
-    const { name } = req.body;
+    const { name } = req.params;
     const outletId = req.outletId;
 
     const error = validateName(name);

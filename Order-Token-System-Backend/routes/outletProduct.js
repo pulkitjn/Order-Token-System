@@ -10,7 +10,7 @@ outletProductRoutes.post('/add', productController.addProduct);
 
 outletProductRoutes.delete('/delete',productController.deleteProduct);
 
-outletProductRoutes.put('/update', productController.updateProduct);
+outletProductRoutes.put('/update/:name', productController.updateProduct);
 
 outletProductRoutes.get('/names', productController.getProductNames);
 

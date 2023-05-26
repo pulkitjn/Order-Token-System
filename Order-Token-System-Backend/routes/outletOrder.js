@@ -7,5 +7,7 @@ const outletOrderRoutes = Router();
 
 outletOrderRoutes.use(outletController.outletTokenAuthenticate);
 outletOrderRoutes.post('/add', orderController.addOrder);
+outletOrderRoutes.delete('/delete/:orderId',orderController.deleteOrder);
+outletOrderRoutes.get('/get',orderController.getOutletOrder);
 
 export default outletOrderRoutes;

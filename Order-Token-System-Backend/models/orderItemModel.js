@@ -1,17 +1,18 @@
 import { Schema, model } from "mongoose";
 
-const orderItemSchema = new Schema({
-  orderId: {
-    type: Schema.Types.ObjectId,
-    ref: "Order",
-    required: true,
-  },
-  productId: {
-    type: Schema.Types.ObjectId,
-    ref: "Product",
-    validate: {
-      validator: async function (productId) {
-        try {
+const orderItemSchema = new Schema(
+  {
+    orderId: {
+      type: Schema.Types.ObjectId,
+      ref: "Order",
+      required: true,
+    },
+    productId: {
+      type: Schema.Types.ObjectId,
+      ref: "Product",
+      validate: {
+        validator: async function (productId) {
+          try {
             const product = await model("Product").findById(productId);
             if (!product) {
               return false;
@@ -21,37 +22,41 @@ const orderItemSchema = new Schema({
           } catch (error) {
             return false;
           }
+        },
+        message: function () {
+          return `The selected item does not belong to the outlet.`;
+        },
       },
-      message: function () {
-        return `The selected item does not belong to the outlet.`;
+      required: true,
+    },
+    quantity: {
+      type: Number,
+      required: true,
+      validate: {
+        validator: Number.isInteger,
+        message: "Quantity must be an integer.",
       },
+      min: [1, "Quantity must be a positive integer"],
     },
-    required: true,
-  },
-  quantity: {
-    type: Number,
-    required: true,
-    validate: {
-      validator: Number.isInteger,
-      message: "Quantity must be an integer.",
+    status: {
+      type: String,
+      enum: {
+        values: ["inqueue", "inprocess", "prepared", "collected"],
+        message: "Invalid status value.",
+      },
+      default: "inqueue",
     },
-    min: [1, "Quantity must be a positive integer"]
-  },
-  status: {
-    type: String,
-    enum: {
-      values: ["In Queue", "In Process", "Prepared", "Completed"],
-      message: "Invalid status value.",
+    token: {
+      type: String,
+      unique: true,
+      required: true,
     },
-    default: "In Queue",
   },
-  token: {
-    type: String,
-    unique: true,
-    required: true,
-  },
-});
+  {
+    timestamps: true,
+  }
+);
 
 const OrderItem = model("OrderItem", orderItemSchema);
 
-export default OrderItem
+export default OrderItem;

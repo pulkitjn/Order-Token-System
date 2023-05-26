@@ -61,7 +61,8 @@ const addOrder = async (req, res) => {
         return await orderItem.save();
       })
     );
-
+    console.log(savedOrder);
+    console.log(createdOrderItems);
     res.status(201).json({ message: "Order created successfully" });
   } catch (error) {
     console.log(error);

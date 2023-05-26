@@ -2,9 +2,12 @@ import { Router } from "express";
 import outletController from '../controllers/outlet/outletController.js'
 import outletProductRoutes from "./outletProduct.js";
 import outletOrderRoutes from "./outletOrder.js";
+import outletOrderItemRoutes from "./outletOrderItem.js";
 const outletRoutes = Router();
 
 outletRoutes.use('/products', outletProductRoutes)
+
+outletRoutes.use('/orderitem',outletOrderItemRoutes);
 
 outletRoutes.use('/order',outletOrderRoutes);
 
