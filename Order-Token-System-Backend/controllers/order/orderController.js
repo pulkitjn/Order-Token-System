@@ -3,6 +3,7 @@ import deleteOrder from "./deleteOrder.js";
 import deleteOrderItem from "./deleteOrderItem.js";
 import getOutletOrder from "./getOutletOrder.js";
 import changeOrderItemStatus from "./changeOrderItemStatus.js";
+import getCustomerOrder from "./getCustomerOrder.js";
 
 export default {
   addOrder,
@@ -10,4 +11,5 @@ export default {
   deleteOrderItem,
   changeOrderItemStatus,
   getOutletOrder,
+  getCustomerOrder
 };

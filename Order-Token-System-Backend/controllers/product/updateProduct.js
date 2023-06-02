@@ -4,7 +4,6 @@ const updateProduct = async (req, res) => {
   try {
     const { name } = req.params;
     const outletId = req.outletId;
-
     const error = validateName(name);
     if (error) {
       console.log(error);

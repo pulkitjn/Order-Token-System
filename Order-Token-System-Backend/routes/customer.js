@@ -1,8 +1,12 @@
 import { Router } from "express";
 import customerController from '../controllers/customer/customerController.js'
+import customerProductRoutes from "./customerProduct.js";
+import customerOrderRoutes from "./customerOrder.js";
 
 const customerRoutes = Router();
 
+customerRoutes.use('/products', customerProductRoutes);
+customerRoutes.use('/orders', customerOrderRoutes);
 /* {email: "EMAIL_TO_WHICH_OTP_IS_SENT"} */
 customerRoutes.post('/sendotp',customerController.customerRegisterEmailOtp, customerController.sendEmailOTP);
 

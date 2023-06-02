@@ -2,7 +2,7 @@ import Product from "../../models/productModel.js";
 
 const deleteProduct = async (req, res) => {
   try {
-    const { name } = req.query;
+    const { name } = req.params;
     const outletId = req.outletId;
     const error = validateName(name);
     if (error) {

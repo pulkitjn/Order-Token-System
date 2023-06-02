@@ -8,10 +8,11 @@ outletProductRoutes.use(outletController.outletTokenAuthenticate);
 
 outletProductRoutes.post('/add', productController.addProduct);
 
-outletProductRoutes.delete('/delete',productController.deleteProduct);
+outletProductRoutes.delete('/delete/:name',productController.deleteProduct);
 
-outletProductRoutes.put('/update/:name', productController.updateProduct);
+outletProductRoutes.patch('/update/:name', productController.updateProduct);
 
 outletProductRoutes.get('/names', productController.getProductNames);
 
+outletProductRoutes.get('/', productController.getProducts);
 export default outletProductRoutes;
