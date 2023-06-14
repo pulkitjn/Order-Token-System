@@ -5,7 +5,7 @@ import Outlet from "../../models/outletModel.js";
 const outletRegister = async (req, res) => {
   try {
     // Extract the form data from the request body
-    const { name, address, phoneNo, email, pswd} = req.body;
+    const { name, address, phoneNumber, email, password} = req.body;
 
     // validate the req.body
     const error = validateOutlet(req.body);
@@ -16,13 +16,13 @@ const outletRegister = async (req, res) => {
     }
 
     // Hash the password
-    const hashedPassword = await hash(pswd, parseInt(process.env.OTS_BCRYPT_SALT_ROUNDS,10));
+    const hashedPassword = await hash(password, parseInt(process.env.OTS_BCRYPT_SALT_ROUNDS,10));
 
     // Create a new Outlet instance
     const outlet = new Outlet({
       name,
       address,
-      phoneNo,
+      phoneNumber,
       email,
       password: hashedPassword,
     });
@@ -71,11 +71,11 @@ const validateOutlet = (data) => {
   }
 
   if (
-    !data.phoneNo ||
-    typeof data.phoneNo !== "string" ||
-    !/^\d{10}$/.test(data.phoneNo)
+    !data.phoneNumber ||
+    typeof data.phoneNumber !== "string" ||
+    !/^\d{10}$/.test(data.phoneNumber)
   ) {
-    errors.phoneNo =
+    errors.phoneNumber =
       "Outlet phone number is required and must be 10 digits long.";
   }
 
@@ -93,23 +93,27 @@ const validateOutlet = (data) => {
   }
 
   if (
-    !data.pswd ||
-    typeof data.pswd !== "string" ||
-    data.pswd.trim() === "" ||
-    data.pswd.length < 8
+    !data.password ||
+    typeof data.password !== "string" ||
+    data.password.trim() === "" ||
+    data.password.length < 8
   ) {
     errors.password =
-      "Password is required and must be at least 8 characters long.";
+      "Please enter a new password that is at least 8 characters long.";
+  } else{
+    const trimmedPassword = data.password.trim();
+    if(!/^[a-zA-Z0-9!@#$%^&*]+$/.test(trimmedPassword)){
+      errors.password = "Password can only contain letters A-Z or a-z, digits 0-9 and symbols !@#$%^&*]";
+    }
   }
-  console.log(data.cnfrmPswd);
-  console.log(data.pswd);
+
   if (
-    !data.cnfrmPswd ||
-    typeof data.cnfrmPswd !== "string" ||
-    data.cnfrmPswd.trim() === "" ||
-    data.cnfrmPswd !== data.pswd
+    !data.confirmPassword ||
+    typeof data.confirmPassword !== "string" ||
+    data.confirmPassword.trim() === "" ||
+    data.confirmPassword !== data.password
   ) {
-    errors.cnfrmPswd =
+    errors.confirmPassword =
       "Confirmation password is required and must match the password field.";
   }
 

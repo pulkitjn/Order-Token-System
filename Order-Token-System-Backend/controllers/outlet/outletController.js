@@ -4,6 +4,7 @@ import outletRegister from "./outletRegister.js";
 import outletLogin from "./outletLogin.js";
 import sendEmailOTP from "../emailOtp/sendEmailOtp.js";
 import outletTokenAuthenticate from "./outletTokenAuthenticate.js";
+import outletTokenRefresh from "./outletTokenRefresh.js";
 
 export default {
     outletRegisterEmailOtp,
@@ -11,5 +12,6 @@ export default {
     outletRegister,
     outletLogin,
     sendEmailOTP,
-    outletTokenAuthenticate
+    outletTokenAuthenticate,
+    outletTokenRefresh
   };

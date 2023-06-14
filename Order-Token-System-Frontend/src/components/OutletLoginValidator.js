@@ -1,20 +1,21 @@
-const OutletLoginValidator = (formData) =>{
-    const {email,pswd} = formData;
+const OutletLoginValidator = (formData) => {
+  const { email, password } = formData;
+  const errors = {};
 
-    if (!email) {
-        return "Please enter your registered outlet email address.";
-    }
-
-    // Email validation regex
+  if (!email) {
+    errors.email = "Please enter your registered outlet email address.";
+  } else {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
-      return "Please enter a valid email address.";
+      errors.email = "Please enter a valid email address.";
     }
+  }
 
-    if(!pswd) {
-        return "Please enter password.";
-    }
-    return "";
-}
+  if (!password) {
+    errors.password = "Please enter a password.";
+  }
 
-export default OutletLoginValidator
+  return errors;
+};
+
+export default OutletLoginValidator;

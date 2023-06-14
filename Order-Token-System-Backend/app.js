@@ -1,6 +1,7 @@
 import express from 'express';
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
+import cookieParser from 'cookie-parser';
 
 const app = express();
 dotenv.config();
@@ -10,10 +11,11 @@ import outletRoutes from './routes/outlet.js';
 
 app.use(express.json());
 app.use(express.urlencoded({extended:true}));
+app.use(cookieParser());
 
 // Use the route files as middleware
-app.use('/customer', customerRoutes);
-app.use('/outlet', outletRoutes);
+app.use('/customers', customerRoutes);
+app.use('/outlets', outletRoutes);
 
 mongoose.connect(process.env.OTS_DB_CONNECT_STR, {
   dbName: 'OTS_db',

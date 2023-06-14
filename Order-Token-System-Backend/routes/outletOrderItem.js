@@ -5,7 +5,7 @@ import outletController from "../controllers/outlet/outletController.js";
 const outletOrderItemRoutes = Router();
 
 outletOrderItemRoutes.use(outletController.outletTokenAuthenticate);
-outletOrderItemRoutes.delete('/delete/:orderItemId', orderController.deleteOrderItem);
+outletOrderItemRoutes.delete('/:orderItemId', orderController.deleteOrderItem);
 outletOrderItemRoutes.patch('/changestatus/:orderItemId',orderController.changeOrderItemStatus);
 
 export default outletOrderItemRoutes;

@@ -5,28 +5,46 @@ import Outlet from "../../models/outletModel.js";
 
 const outletLogin = async (req, res) => {
   try {
-    const { email, pswd } = req.body;
+    const { email, password } = req.body;
     const existingOutlet = await Outlet.findOne({ email: email });
 
     if (!existingOutlet) {
-      res.status(401).json({ error: "Email is not registered" });
+      res.status(404).json({ error: "Email not registered with us" });
       return;
     }
 
-    const password = existingOutlet.toObject().password;
-    console.log(`Hashed password from db is ${password} and put in password is ${pswd}`);
-    const isMatch = await compare(pswd, password);
+    const passwordFromDB = existingOutlet.toObject().password;
+    console.log(`Hashed password from db is ${passwordFromDB} and put in password is ${password}`);
+    const isMatch = compare(password, passwordFromDB);
     if (!isMatch) {
-      res.status(401).json({ error: "Password is incorrect" });
+      res.status(400).json({ error: "Incorrect Password !!" });
       return;
     }
 
-    const secretKey = process.env.OTS_JWT_SECRET_KEY;
-    const token = sign({ outletEmail: email }, secretKey, {
-      expiresIn: "1d", // Token expiration time
-    });
 
-    res.json({ token });
+    const refreshTokenSecret = process.env.REFRESH_JWT_SECRET;
+    const refreshToken = sign({outletEmail: email}, refreshTokenSecret, {
+      expiresIn: "1d",
+    });
+    const accessTokenSecret = process.env.ACCESS_JWT_SECRET;
+    const accessToken = sign({outletEmail: email}, accessTokenSecret, {
+      expiresIn: "15m",
+    });
+    const cookieName = "outletRefreshToken";
+
+    const expirationDate = new Date();
+    expirationDate.setDate(expirationDate.getDate() + 30);
+    res.cookie(cookieName, refreshToken, {
+      expires: expirationDate,
+      httpOnly: true,
+      sameSite: "strict"
+    }); 
+
+    // const cookieOptions =
+    //   `HttpOnly; Path=/; SameSite=Strict; Expires=${expirationDate.toUTCString()}`;
+    // const refreshTokenCookie = `${cookieName}=${refreshToken}${cookieOptions}`;
+    // res.setHeader("Set-Cookie", refreshTokenCookie);
+    res.status(200).json({ message: "You are in!", accessToken });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Internal Server error" });

@@ -1,136 +1,223 @@
 import { useNavigate } from "react-router-dom";
-import "../cssfiles/OutletForm.css";
-import { useState, useEffect } from "react";
+import { useContext } from "react";
+import axios from "axios";
+import { Button, Grid, TextField, Typography} from "@mui/material";
+import { styled } from "@mui/system";
+
 import OutletRegisterValidator from "./OutletRegisterValidator";
+import { ToastContext } from "../contextproviders/ToastContext";
+import useFormInput from "../customhooks/useFormInput";
+import { getFirstPropValue, isObject } from "../utils";
+import PasswordTextField from "../customcomponents/PasswordTextField";
 
-const OutlletRegister = () => {
+const Container = styled("div")({
+  minHeight: "100vh",
+  display: "flex",
+  alignItems: "center",
+  backgroundColor: "#FFDAB9",
+});
+
+const Card = styled("div")(({ theme }) => ({
+  padding: theme.spacing(2),
+  maxWidth: 400,
+  borderRadius: theme.shape.borderRadius,
+  boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
+  backgroundColor: "#fff",
+}));
+
+const Title = styled(Typography)(({ theme }) => ({
+  marginBottom: theme.spacing(2),
+  marginTop: theme.spacing(2),
+}));
+
+const StyledButton = styled(Button)(({ theme }) => ({
+  marginBottom: theme.spacing(2),
+  padding: theme.spacing(1),
+  backgroundColor: "#6c63ff",
+  boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
+}));
+
+const Footer = styled(Typography)(({ theme }) => ({
+  marginTop: theme.spacing(4),
+}));
+
+const OutletRegister = () => {
   const navigate = useNavigate();
+  const {showToast} = useContext(ToastContext);
+  const name = useFormInput("");
+  const address = useFormInput("");
+  const phoneNumber = useFormInput("");
+  const email = useFormInput("");
+  const password = useFormInput("");
+  const confirmPassword = useFormInput("");
 
-  const [outletName, setOutletName] = useState("");
-  const [address, setAddress] = useState("");
-  const [phoneNumber, setPhoneNumber] = useState("");
-  const [outletEmail, setOutletEmail] = useState("");
-  const [outletPswd, setOutletPswd] = useState("");
-  const [outletCfrmPswd, setOutletCfrmPswd] = useState("");
-
-  const [errorMessage, setErrorMessage] = useState("");
-
-  const onClickHandler = (response) => {
+  const handleSubmit = (event) => {
+    event.preventDefault();
     const formData = {
-        name : outletName,
-        address: address,
-        phoneNo: phoneNumber,
-        email: outletEmail,
-        pswd: outletPswd,
-        cnfrmPswd: outletCfrmPswd,
+      name: name.value,
+      address: address.value,
+      phoneNumber: phoneNumber.value,
+      email: email.value,
+      password: password.value,
+      confirmPassword: confirmPassword.value,
     };
 
-    const errorMessage = OutletRegisterValidator(formData);
+    const validationErrors = OutletRegisterValidator(formData);
 
-    if(errorMessage){
-        setErrorMessage(errorMessage)
-        return;
+    if (Object.keys(validationErrors).length > 0) {
+      for (const field in validationErrors) {
+        if (validationErrors.hasOwnProperty(field)) {
+          const errorMessage = validationErrors[field];
+          if (field === "name") {
+            name.handleError(errorMessage);
+          } else if (field === "address") {
+            address.handleError(errorMessage);
+          } else if (field === "phoneNumber") {
+            phoneNumber.handleError(errorMessage);
+          } else if (field === "email") {
+            email.handleError(errorMessage);
+          } else if (field === "password") {
+            password.handleError(errorMessage);
+          } else if (field === "confirmPassword") {
+            confirmPassword.handleError(errorMessage);
+          }
+        }
+      }
+      return;
     }
-
-    navigate("/outlet/verify" , {state :{outletEmail:outletEmail}});
+    const sendOtp = async () => {
+      try {
+        const response = await axios.post("/outlets/sendotp", {
+          email: formData.email,
+        });
+        showToast(response.data.message, "info");
+        console.log(response.data.message);
+        navigate("/outlet/verify", { state: formData });
+      } catch (error) {
+        let errMsg;
+        if(isObject(error.response.data.error)){
+          errMsg = getFirstPropValue(error.response.data.error);
+        }else{
+          errMsg = error.response.data.error;
+        }
+        showToast(errMsg, 'error');
+        console.log(error);
+      }
+    };
+    sendOtp();
   };
 
-  const onFailure = (response) => {
-    console.log("Google Auth failed!", response);
-  };
   return (
-    <div className="card-container">
-      <div className="card">
-        <div className="card-header">
-          <h2>Outlet Register</h2>
-        </div>
-        <div>
-          <div className="card-body">
-            <div className="form-group">
-              <input
+    <Container>
+      <Grid
+        container
+        justifyContent="center"
+        direction="column"
+        alignItems="center"
+        marginX={2}
+        marginY={2}
+      >
+        <Grid item xs={10} sm={8} md={6} lg={4}>
+          <Card>
+            <Title variant="h5" align="center">
+              Outlet Register
+            </Title>
+            <form onSubmit={handleSubmit} noValidate>
+              <TextField
                 type="text"
-                placeholder="Outlet Name"
-                value={outletName}
-                onChange={(event) => setOutletName(event.target.value)}
-                required
+                label="Outlet Name"
+                autoComplete="organization"
+                value={name.value}
+                onChange={name.onChange}
+                error={!!name.error}
+                helperText={name.error}
+                fullWidth
+                margin="normal"
+                size="small"
               />
-            </div>
-            <div className="form-group">
-              <input
+              <TextField
                 type="text"
-                placeholder="Address"
-                value={address}
-                onChange={(event) => setAddress(event.target.value)}
+                label="Address"
+                autoComplete="street-address"
+                value={address.value}
+                onChange={address.onChange}
+                error={!!address.error}
+                helperText={address.error}
                 required
+                fullWidth
+                margin="normal"
+                size="small"
               />
-            </div>
-            <div className="form-group">
-              <input
+              <TextField
                 type="tel"
-                placeholder="Phone Number"
-                value={phoneNumber}
-                onChange={(event) => setPhoneNumber(event.target.value)}
+                label="Phone Number"
+                value={phoneNumber.value}
+                onChange={phoneNumber.onChange}
+                error={!!phoneNumber.error}
+                helperText={phoneNumber.error}
                 required
+                fullWidth
+                margin="normal"
+                size="small"
               />
-            </div>
-            <div className="form-group">
-              <input
+              <TextField
                 type="email"
-                placeholder="Outlet Email"
-                value={outletEmail}
-                onChange={(event) => setOutletEmail(event.target.value)}
+                label="Outlet Email"
+                autoComplete="email"
+                value={email.value}
+                onChange={email.onChange}
+                error={!!email.error}
+                helperText={email.error}
                 required
+                fullWidth
+                margin="normal"
+                size="small"
               />
-            </div>
-            <div className="form-group">
-              <input
+              <PasswordTextField
                 type="password"
-                placeholder="New Password"
-                value={outletPswd}
-                onChange={(event) => setOutletPswd(event.target.value)}
+                label="New Password"
+                autoComplete="new-password"
+                value={password.value}
+                onChange={password.onChange}
+                error={!!password.error}
+                helperText={password.error}
                 required
+                fullWidth
+                margin="normal"
+                size="small"
               />
-            </div>
-            <div className="form-group">
-              <input
+              <PasswordTextField
                 type="password"
-                placeholder="Confirm Password"
-                value={outletCfrmPswd}
-                onChange={(event) => setOutletCfrmPswd(event.target.value)}
+                label="Confirm Password"
+                autoComplete="new-password"
+                value={confirmPassword.value}
+                onChange={confirmPassword.onChange}
+                error={!!confirmPassword.error}
+                helperText={confirmPassword.error}
                 required
+                fullWidth
+                margin="normal"
+                size="small"
               />
-            </div>
-            {errorMessage && <div>{errorMessage}</div>}
-            <button className="google-btn" onClick={onClickHandler}>
-              {`Sign Up`}
-            </button>
-            <div className="switch">
-              <>
-                Already have an account?{" "}
-                <button
-                  onClick={() => {
-                    navigate("/outlet/login");
-                  }}
-                >
-                  Login
-                </button>
-              </>
-            </div>
-          </div>
-        </div>
-        <div className="card-footer">
-          <p
-            className="appname"
-            onClick={() => {
-              navigate("/");
-            }}
-          >
-            OTSApp
-          </p>
-        </div>
-      </div>
-    </div>
+              <StyledButton type="submit" variant="contained" fullWidth>
+                Sign Up
+              </StyledButton>
+            </form>
+            <Typography align="center">
+              Already have an account?{" "}
+              <Button
+                onClick={() => {
+                  navigate("/outlet/login");
+                }}
+              >
+                Login
+              </Button>
+            </Typography>
+          </Card>
+        </Grid>
+      </Grid>
+    </Container>
   );
 };
 
-export default OutlletRegister;
+export default OutletRegister;

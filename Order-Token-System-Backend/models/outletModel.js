@@ -20,7 +20,7 @@ const outletSchema = new Schema(
         `Please enter a valid address without special characters or symbols.`,
       ],
     },
-    phoneNo: {
+    phoneNumber: {
       type: String,
       required: [true, "Outlet phone number is required."],
       trim: true,

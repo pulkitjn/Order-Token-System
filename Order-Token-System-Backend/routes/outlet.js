@@ -7,14 +7,16 @@ const outletRoutes = Router();
 
 outletRoutes.use('/products', outletProductRoutes)
 
-outletRoutes.use('/orderitem',outletOrderItemRoutes);
+outletRoutes.use('/orderitems',outletOrderItemRoutes);
 
-outletRoutes.use('/order',outletOrderRoutes);
+outletRoutes.use('/orders',outletOrderRoutes);
 
 outletRoutes.post('/sendotp',outletController.outletRegisterEmailOtp, outletController.sendEmailOTP);
 
 outletRoutes.post('/register', outletController.verifyEmailOtp, outletController.outletRegister);
 
 outletRoutes.post('/login', outletController.outletLogin);
+
+outletRoutes.post('/refreshtoken', outletController.outletTokenRefresh);
 
 export default outletRoutes;

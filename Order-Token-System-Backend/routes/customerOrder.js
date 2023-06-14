@@ -6,6 +6,6 @@ const customerOrderRoutes = Router();
 
 customerOrderRoutes.use(customerController.customerTokenAuthenticate);
 
-customerOrderRoutes.get('/get',orderController.getCustomerOrder);
+customerOrderRoutes.get('/',orderController.getCustomerOrder);
 
 export default customerOrderRoutes;

@@ -17,8 +17,8 @@ customerRoutes.post('/sendotp',customerController.customerRegisterEmailOtp, cust
     otp: "OTP",
     firstName: "CUSTOMER_FIRST_NAME",
     lastName: "CUSTOMER_LAST_NAME",
-    pswd: "MINIMUM_8_CHAR",
-    cnfrmPswd: "NEED_TO_BE_SAME_AS_PSWD"
+    password: "MINIMUM_8_CHAR",
+    confirmPassword: "NEED_TO_BE_SAME_AS_PASSWORD"
 }
 */
 customerRoutes.post('/register', customerController.verifyEmailOtp, customerController.customerRegister);
@@ -26,10 +26,11 @@ customerRoutes.post('/register', customerController.verifyEmailOtp, customerCont
 /*
 {
     email: "CUSTOMER_EMAIL",
-    pswd: "CUSTOMER_PSWD"
+    password: "CUSTOMER_PASSWORD"
 }
 */
 customerRoutes.post('/login', customerController.customerLogin);
+customerRoutes.post('/refreshtoken', customerController.customerTokenRefresh);
 
 customerRoutes.get('/protected', customerController.customerTokenAuthenticate, (req,res)=>{
     res.send(`You are now in a protected route. Your email is ${req.customerId}`);

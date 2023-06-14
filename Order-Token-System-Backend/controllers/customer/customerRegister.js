@@ -6,7 +6,7 @@ const customerRegister = async (req, res) => {
   try {
     // Extract the form data from the request body
     console.log('customerRegister called');
-    const { firstName, lastName, email, pswd } = req.body;
+    const { firstName, lastName, email, password } = req.body;
 
     // validate the req.body
     const error = validateCustomer(req.body);
@@ -17,7 +17,7 @@ const customerRegister = async (req, res) => {
     }
 
     // Hash the password
-    const hashedPassword = await hash(pswd,  parseInt(process.env.OTS_BCRYPT_SALT_ROUNDS,10));
+    const hashedPassword = await hash(password,  parseInt(process.env.OTS_BCRYPT_SALT_ROUNDS,10));
 
     // Create a new Customer instance
     const customer = new Customer({
@@ -89,22 +89,27 @@ const validateCustomer = (data) => {
   }
 
   if (
-    !data.pswd ||
-    typeof data.pswd !== "string" ||
-    data.pswd.trim() === "" ||
-    data.pswd.length < 8
+    !data.password ||
+    typeof data.password !== "string" ||
+    data.password.trim() === "" ||
+    data.password.length < 8
   ) {
     errors.password =
       "Please enter a new password that is at least 8 characters long.";
+  } else{
+    const trimmedPassword = data.password.trim();
+    if(!/^[a-zA-Z0-9!@#$%^&*]+$/.test(trimmedPassword)){
+      errors.password = "Password can only contain letters A-Z or a-z, digits 0-9 and symbols !@#$%^&*]";
+    }
   }
 
   if (
-    !data.cnfrmPswd ||
-    typeof data.cnfrmPswd !== "string" ||
-    data.cnfrmPswd.trim() === "" ||
-    data.cnfrmPswd !== data.pswd
+    !data.confirmPassword ||
+    typeof data.confirmPassword !== "string" ||
+    data.confirmPassword.trim() === "" ||
+    data.confirmPassword !== data.password
   ) {
-    errors.cnfrmPswd =
+    errors.confirmPassword =
       "Confirmation password is required and must match the password field.";
   }
   return errors;

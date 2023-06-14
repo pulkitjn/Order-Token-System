@@ -1,20 +1,23 @@
-const CusLoginValidator = (formData) =>{
-    const {email,pswd} = formData;
-
+const CusLoginValidator = (formData) => {
+    const { email, password } = formData;
+    const errors = {};
+  
     if (!email) {
-        return "Please enter your registered email address.";
+      errors.email = "Please enter your registered email address.";
+    } else {
+      // Email validation regex
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(email)) {
+        errors.email = "Please enter a valid email address.";
+      }
     }
-
-    // Email validation regex
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-      return "Please enter a valid email address.";
+  
+    if (!password) {
+      errors.password = "Please enter password.";
     }
-
-    if(!pswd) {
-        return "Please enter password.";
-    }
-    return "";
-};
-
-export default CusLoginValidator
+  
+    return errors;
+  };
+  
+  export default CusLoginValidator;
+  

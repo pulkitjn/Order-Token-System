@@ -5,16 +5,16 @@ import Outlet from "../../models/outletModel.js";
 const outletTokenAuthenticate = async (req, res, next) => {
   try {
     const authHeader = req.headers.authorization;
-    const token = authHeader && authHeader.split(" ")[1];
+    const accessToken = authHeader && authHeader.split(" ")[1];
 
-    if (!token) {
+    if (!accessToken) {
       return res.status(401).json({ error: "Unauthorized" });
     }
-    const secretKey = process.env.OTS_JWT_SECRET_KEY;
-    const payLoad = verify(token, secretKey);
+    const accessTokenSecret = process.env.ACCESS_JWT_SECRET;
+    const payLoad = verify(accessToken, accessTokenSecret);
     const existingOutlet = await Outlet.findOne({ email: payLoad.outletEmail });
     if (!existingOutlet) {
-      return res.status(404).json({ error: "Outlet Not found" });
+      return res.status(404).json({ error: "Outlet not found" });
     }
     req.outletId = existingOutlet._id;
     next();

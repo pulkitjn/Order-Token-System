@@ -55,7 +55,7 @@ const customerRegisterEmailOtp = async (req, res, next) => {
     next();
   } catch (error) {
     console.error("Error registering user otp: ", error);
-    res.status(500).json({ error: "Error registering user otp:" });
+    res.status(500).json({ error: "Error registering user otp" });
   }
 };
 

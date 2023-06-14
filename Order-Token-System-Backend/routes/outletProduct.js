@@ -6,11 +6,11 @@ const outletProductRoutes = Router();
 
 outletProductRoutes.use(outletController.outletTokenAuthenticate);
 
-outletProductRoutes.post('/add', productController.addProduct);
+outletProductRoutes.post('/', productController.addProduct);
 
-outletProductRoutes.delete('/delete/:name',productController.deleteProduct);
+outletProductRoutes.delete('/:name',productController.deleteProduct);
 
-outletProductRoutes.patch('/update/:name', productController.updateProduct);
+outletProductRoutes.patch('/:name', productController.updateProduct);
 
 outletProductRoutes.get('/names', productController.getProductNames);
 
